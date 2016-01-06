@@ -1,0 +1,64 @@
+<html>
+<head>
+  <style>
+    body {
+      margin: 0;
+    }
+    textarea {
+      width: 100%;
+      height: 100%;
+      padding: 10px;
+      border-style: none;
+      outline: none;
+      background: transparent;
+    }
+  </style>
+</head>
+<body>
+  <textarea autofocus></textarea>
+  <script>
+    var editor = document.querySelector('textarea');
+    var settingKey = 'editor::settings';
+    var settings = null;
+    var defaultSettings = {
+      backgroundColor: 'FFF',
+      fontSize: '12'
+    };
+
+    if (!(settings = JSON.parse(localStorage.getItem(settingKey)))) {
+      settings = defaultSettings;
+      localStorage.setItem(settingKey, JSON.stringify(settings));
+    }
+
+    editor.style.backgroundColor = settings.backgroundColor;
+    editor.style.fontSize = settings.fontSize;
+    editor.value = localStorage.getItem('last');
+
+    document.addEventListener('keydown', function (event) {
+      if (event.keyCode === 27) {
+        var cmd = prompt('Command:')
+
+        switch (cmd) {
+          case null:
+            break;
+          case 'color':
+            settings.backgroundColor = prompt('Color code:');
+            editor.style.backgroundColor = settings.backgroundColor;
+            localStorage.setItem(settingKey, JSON.stringify(settings));
+            break;
+          case 'font':
+            settings.fontSize = prompt('Font size (px):');
+            editor.style.fontSize = settings.fontSize + 'px';
+            localStorage.setItem(settingKey, JSON.stringify(settings));
+            break;
+          case 'save':
+            localStorage.setItem('last', editor.value)
+            break;
+          default:
+            alert('Unknown cmd "' + cmd + '"')
+            break;
+        }
+      }
+    })
+  </script>
+</body>
